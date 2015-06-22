@@ -65,14 +65,15 @@ public class ValidationContextTest {
         Order order = new Order();
 
         ValidationResult actual = new ValidationContext<Order>("order", order)
-                .failWhenMissingAs("a1")
-                .validate("customer", Order::getCustomer, customer -> customer
-                        .failWhenMissingAs("a2")
+                .failWhenMissingAs("MISSING-ORDER")
+                .validate("customer", Order::getCustomer, 
+                    $customer -> $customer
+                        .failWhenMissingAs("MISSING-CUSTOMER")
                         .result())
                 .result();
         
         assertThat(actual.hasFailure(), is(true));
-        assertThat(actual.hasValidationCode("a2"), is(true));
+        assertThat(actual.hasValidationCode("MISSING-CUSTOMER"), is(true));
     }
     
     @Test
@@ -82,18 +83,18 @@ public class ValidationContextTest {
         order.setCustomer(person);
 
         ValidationResult actual = new ValidationContext<Order>("order", order)
-                .failWhenMissingAs("a1")
+                .failWhenMissingAs("MISSING-ORDER")
                 .validate("customer", Order::getCustomer, customer -> customer
-                        .failWhenMissingAs("a2")
+                        .failWhenMissingAs("MISSING-CUSTOMER")
                         .validateString("customernumber", Person::getFirstname, 
                                 customernumber -> customernumber
-                                    .failWhenMissingAs("a3")
+                                    .failWhenMissingAs("MISSING-CUSTOMER-NUMBER")
                                     .result())
                         .result())
                 .result();
         
         assertThat(actual.hasFailure(), is(true));
-        assertThat(actual.hasValidationCode("a3"), is(true));
+        assertThat(actual.hasValidationCode("MISSING-CUSTOMER-NUMBER"), is(true));
     }
 
     @Test
@@ -133,23 +134,25 @@ public class ValidationContextTest {
         order.setOrderLine(Lists.newArrayList());
 
         ValidationResult actual = new ValidationContext<Order>("order", order)
-                .failWhenMissingAs("a1")
-                .validate("customer", Order::getCustomer, customer -> customer
-                        .failWhenMissingAs("a2")
-                        .validateString("customernumber", Person::getFirstname, 
-                                customernumber -> customernumber
-                                    .failWhenMissingAs("a3")
+                .failWhenMissingAs("MISSING-ORDER")
+                .validate("customer", Order::getCustomer, 
+                    $customer -> $customer
+                        .failWhenMissingAs("MISSING-CUSTOMER")
+                        .validateString("customerid", Person::getCustomerid, 
+                                $customerid -> $customerid
+                                    .failWhenMissingAs("MISSING-CUSTOMER-ID")
+                                    .failWhenLongerThan(30, "CUSTOMER-ID-TOO-LONG")
                                     .result())
                         .result())
                 .validateCollection("orderlines", Order::getOrderLine,
-                        orderLines -> orderLines
-                            .failWhenMissingAs("a4")
-                            .failWhenEmpty("a5")
+                        $orderLines -> $orderLines
+                            .failWhenMissingAs("MISSING-ORDERLINES")
+                            .failWhenEmpty("ORDERLINES-EMPTY")
                             .result())
                 .result();
         
         assertThat(actual.hasFailure(), is(true));
-        assertThat(actual.hasValidationCode("a5"), is(true));
+        assertThat(actual.hasValidationCode("ORDERLINES-EMPTY"), is(true));
     }
     
     @Test
@@ -199,10 +202,11 @@ public class ValidationContextTest {
 
         ValidationResult actual = new ValidationContext<Order>("order", order)
                 .failWhenMissingAs("a1")
-                .validate("customer", Order::getCustomer, customer -> customer
+                .validate("customer", Order::getCustomer, 
+                    $customer -> $customer
                         .failWhenMissingAs("a2")
                         .validateString("customernumber", Person::getFirstname, 
-                                customernumber -> customernumber
+                                 $customernumber ->  $customernumber
                                     .failWhenMissingAs("a3")
                                     .result())
                         .result())
@@ -210,9 +214,11 @@ public class ValidationContextTest {
                         $orderLines -> $orderLines
                             .failWhenMissingAs("a4")
                             .failWhenEmpty("a5")
-                            .validateEachItem($orderLine -> $orderLine.failWhenMissingAs("a6")
+                            .validateEachItem(
+                                $orderLine -> $orderLine
+                                    .failWhenMissingAs("a6")
                                     .validateString("itemCode", OrderLine::getItemCode, 
-                                            itemCode -> itemCode.failWhenMissingAs("a7")
+                                            $itemCode -> $itemCode.failWhenMissingAs("a7")
                                                 .result())
                                 .result())
                             .result())
