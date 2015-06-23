@@ -46,7 +46,7 @@ public class ValidationContextTest {
     public void asOptional_Null_WillNotFail() throws Exception {
         ValidationResult actual = new ValidationContext<Order>("order", null)
             .asOptional()
-            .evaluate("customer", Order::getCustomer, o -> o)
+            .evaluate("customer", Order::getCustomer, customer -> customer)
             .result();
 
         assertThat(actual.hasFailure(), is(false));
@@ -56,7 +56,7 @@ public class ValidationContextTest {
     public void validate_NoOrder_RegisterWarningItemIsNotMarkedAsOptional() throws Exception {
         ValidationResult result = new ValidationContext<Order>("order", null)
             .evaluate("customer", Order::getCustomer,
-                    o -> o)
+                    customer -> customer)
             .result();
 
         assertThat(result.hasWarning(), is(true));
@@ -127,8 +127,8 @@ public class ValidationContextTest {
             .evaluate("customer", Order::getCustomer,
                 customer -> customer
                     .failWhenMissing()
-                    .validateString("customernumber", Person::getFirstname,
-                        customernumber -> customernumber
+                    .validateString("firstname", Person::getFirstname,
+                        firstname -> firstname
                             .failWhenMissing()))
             .evaluate("orderlines", Order::getOrderLine, 
                 orderLines -> orderLines
@@ -159,8 +159,8 @@ public class ValidationContextTest {
             .evaluate("customer", Order::getCustomer,
                 customer -> customer
                     .failWhenMissing()
-                    .validateString("customernumber", Person::getFirstname,
-                        customernumber -> customernumber
+                    .validateString("firstname", Person::getFirstname,
+                        firstname -> firstname
                             .failWhenMissing()))
             .evaluateCollection("orderlines", 
                 Order::getOrderLine, 

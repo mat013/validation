@@ -6,60 +6,45 @@ The concept is that a validation context for each item that needs to be validati
 then one can specify constraint which should be checked against the actual object being validated. 
 
 The following example shows how an order is checked against null. If the actual order is null then this is registered
-in the validation result as a failure with validation code MISSING-ORDER. The order has a customer attribute, 
+in the validation result as a failure with validation code MISSING for the context order". The order has a customer attribute, 
 which is then validated whether it is null or not. if the customer is null it is registered as failure with validation
-code MISSING-CUSTOMER:
+code MISSING for context "customer":
 
-        ValidationResult actual = new ValidationContext<Order>("order", order)
-                .failWhenMissingAs("MISSING-ORDER")
-                .validate("customer", Order::getCustomer, 
-                    $customer -> $customer
-                        .failWhenMissingAs("MISSING-CUSTOMER")
-                        .result())
-                .result();
+        ValidationResult result = new ValidationContext<Order>("order", order)
+            .failWhenMissing()
+            .evaluate("customer", Order::getCustomer, 
+                customer -> customer
+                    .failWhenMissing())
+                    .result();
 
 One can then check the validation result and check if it has any validation registration
-				
-        actual.hasFailure();
-		actual.hasValidationCode("MISSING-CUSTOMER");
+		ValidationRegistration actual = ... 		
+        actual.getContext(); 		// customer
+        actual.getContextPath();	// order.customer
+        actual.getLocation();		// order.customer
+        actual.getValidationCode();	// ValidationResultProvider.MISSING
 
 Following is a more complex example showing validation of an order, which should have a customer, 
 with a customer id. The customer id should not be longer than 30 characters,
 there should be at least one order line:
 
         ValidationResult actual = new ValidationContext<Order>("order", order)
-                .failWhenMissingAs("MISSING-ORDER")
+                .failWhenMissingAs()
                 .validate("customer", Order::getCustomer, 
                     $customer -> $customer
-                        .failWhenMissingAs("MISSING-CUSTOMER")
+                        .failWhenMissing()
                         .validateString("customerid", Person::getCustomerid, 
                                 $customerid -> $customerid
-                                    .failWhenMissingAs("MISSING-CUSTOMER-ID")
-                                    .failWhenLongerThan(30, "CUSTOMER-ID-TOO-LONG")
+                                    .failWhenMissing()
+                                    .failWhenLongerThan(30)
                                     .result())
                         .result())
                 .validateCollection("orderlines", Order::getOrderLine,
                         $orderLines -> $orderLines
-                            .failWhenMissingAs("MISSING-ORDERLINES")
-                            .failWhenEmpty("ORDERLINES-EMPTY")
+                            .failWhenMissing()
+                            .failWhenEmpty()
                             .result())
                 .result();
 				
 Please see the test for more examples.
 
-The ambitions is to end up with something like the following:
-
-    ValidationResult actual = new ValidationContext("order", order)
-            .failWhenMissing()
-            .validate("customer", Order::getCustomer, 
-                $customer -> $customer
-                    .failWhenMissing()
-                    .validateString("customerid", Person::getCustomerid, 
-                            $customerid -> $customerid
-                                .failWhenMissing()
-                                .failWhenLongerThan(30)))
-            .validateCollection("orderline", Order::getOrderLine,
-                    $orderLines -> $orderLines
-                        .failWhenMissing()
-                        .failWhenEmpty())
-            .result();
