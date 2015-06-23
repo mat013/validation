@@ -19,10 +19,6 @@ import org.slf4j.LoggerFactory;
 
 import com.google.common.collect.Lists;
 
-import dk.emstar.common.validation.ValidationException;
-import dk.emstar.common.validation.ValidationRegistration;
-import dk.emstar.common.validation.ValidationResult;
-
 @RunWith(MockitoJUnitRunner.class)
 public class ValidationResultTest {
 
@@ -145,6 +141,7 @@ public class ValidationResultTest {
                 .stream()
                 .filter(o -> ValidationLevel.Failure.equals(o.getValidationLevel()))
                 .findFirst();
+        
         assertThat(actual.isPresent(), is(true));
         assertThat(actual.get().getValidationCode(), is("b1"));
     }
@@ -163,6 +160,7 @@ public class ValidationResultTest {
                 .stream()
                 .filter(o -> ValidationLevel.Failure.equals(o.getValidationLevel()))
                 .findFirst();
+        
         assertThat(actual.isPresent(), is(false));
     }
 }

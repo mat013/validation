@@ -26,12 +26,18 @@ public class ValidationResult implements Iterable<ValidationRegistration>, AutoC
 
     private final String context;
 
+    private final String contextPath;
+
+    private final String location;
+
     public ValidationResult() {
-        this("N/A");
+        this("N/A", "N/A", "N/A");
     }
 
-    public ValidationResult(String context) {
+    public ValidationResult(String context, String contextPath, String location) {
         this.context = context;
+        this.contextPath = contextPath;
+        this.location = location;
         validationResults = new ArrayList<Object>();
     }
 
@@ -73,6 +79,14 @@ public class ValidationResult implements Iterable<ValidationRegistration>, AutoC
         return stream().map(o -> o.getDetails()).collect(Collectors.toList());
     }
 
+    public String getCompletePath() {
+        return Joiner.on(".").skipNulls().join(Strings.isNullOrEmpty(contextPath) ? null : contextPath, context);
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
     public String getAllDetailsAsString() {
         return Joiner.on(", ").join(getAllDetails());
     }
@@ -82,17 +96,17 @@ public class ValidationResult implements Iterable<ValidationRegistration>, AutoC
     }
 
     public ValidationResult registerNullValidation(String validationCode, String validationMessage) {
-        register(new ValidationRegistration(validationCode, validationMessage, ValidationLevel.Failure, NULL_ARRAY));
+        register(new ValidationRegistration(validationCode, validationMessage, context, getLocation(), getCompletePath(), ValidationLevel.Failure, NULL_ARRAY));
         return this;
     }
 
     public ValidationResult registerValidationFailure(String validationCode, String validationMessage, Object... input) {
-        register(new ValidationRegistration(validationCode, validationMessage, ValidationLevel.Failure, input));
+        register(new ValidationRegistration(validationCode, validationMessage, context, getLocation(), getCompletePath(), ValidationLevel.Failure, input));
         return this;
     }
 
     public ValidationResult registerValidationWarning(String validationCode, String validationMessage, Object... input) {
-        register(new ValidationRegistration(validationCode, validationMessage, ValidationLevel.Warning, input));
+        register(new ValidationRegistration(validationCode, validationMessage, context, getLocation(), getCompletePath(), ValidationLevel.Warning, input));
         return this;
     }
 
@@ -126,7 +140,6 @@ public class ValidationResult implements Iterable<ValidationRegistration>, AutoC
             logger.error(allDetails);
 
             ValidationRegistration firstValidationFailure = stream().filter(o -> ValidationLevel.Failure.equals(o.getValidationLevel())).findFirst().get();
-
             throw new ValidationException(firstValidationFailure.getValidationCode(), allDetails, this);
         }
 
@@ -147,8 +160,8 @@ public class ValidationResult implements Iterable<ValidationRegistration>, AutoC
         return this;
     }
 
-    public ValidationResult throwIncludeAllMessagesWhenAnyFailures(String ValidationCode, Logger logger) {
-        return throwIncludeAllMessagesWhenAnyFailures(ValidationCode, "", logger);
+    public ValidationResult throwIncludeAllMessagesWhenAnyFailures(String validationCode, Logger logger) {
+        return throwIncludeAllMessagesWhenAnyFailures(validationCode, "", logger);
     }
 
     public ValidationResult throwIncludeAllMessagesWhenAnyFailures(Logger logger) {

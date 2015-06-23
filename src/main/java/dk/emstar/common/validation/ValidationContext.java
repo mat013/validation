@@ -7,4 +7,8 @@ public class ValidationContext<T> extends AbstractValidationContext<ValidationCo
         super(context, currentItemToBeChecked);
     }
 
+    public ValidationContext(String context, String contextPath, String location, T currentItemToBeChecked) {
+        super(context, contextPath, location, currentItemToBeChecked);
+    }
+
 }
