@@ -41,4 +41,8 @@ public class CollectionValidationContext<T> extends AbstractValidationContext<Co
         registerWhenItemIsNullButNotOptional();
         return this;
     }
+    
+    // failWhenHas
+    // failWhenHasNot
+
 }
