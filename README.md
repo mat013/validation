@@ -46,3 +46,20 @@ there should be at least one order line:
                 .result();
 				
 Please see the test for more examples.
+
+The ambitions is to end up with something like the following:
+
+    ValidationResult actual = new ValidationContext("order", order)
+            .failWhenMissing()
+            .validate("customer", Order::getCustomer, 
+                $customer -> $customer
+                    .failWhenMissing()
+                    .validateString("customerid", Person::getCustomerid, 
+                            $customerid -> $customerid
+                                .failWhenMissing()
+                                .failWhenLongerThan(30)))
+            .validateCollection("orderline", Order::getOrderLine,
+                    $orderLines -> $orderLines
+                        .failWhenMissing()
+                        .failWhenEmpty())
+            .result();
