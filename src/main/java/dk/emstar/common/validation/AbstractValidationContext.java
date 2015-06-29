@@ -1,7 +1,5 @@
 package dk.emstar.common.validation;
 
-import java.util.Collection;
-import java.util.function.Function;
 import java.util.function.Predicate;
 
 import com.google.common.base.Joiner;
@@ -21,81 +19,9 @@ public class AbstractValidationContext<T extends AbstractValidationContext<T, U>
     }
 
     @SuppressWarnings("unchecked")
-    public <V> T evaluate(Function<U, V> getter, ValidateResultEvaluator<V> validator) {
-
-        if (!isCurrentToBeCheckedItemNull()) {
-            ValidationResult result = validator.validate(getter.apply(currentItemToBeChecked)).result();
-            validationResult.register(result);
-        }
-        registerWhenItemIsNullButNotOptional();
-        return (T) this;
-    }
-
-    public <V> T evaluate(String context, Function<U, V> getter, ValidateResultEvaluator<ValidationContext<V>> validator) {
-        return validate(context, getter, o -> validator.validate(o).result());
-    }
-
-    public <V> T evaluateCollection(String context, Function<U, Collection<V>> getter,
-            ValidateResultEvaluator<CollectionValidationContext<V>> validator) {
-        return validateCollection(context, getter, o -> validator.validate(o).result());
-    }
-
-    @SuppressWarnings("unchecked")
-    public <V> T validate(String context, Function<U, V> getter, Validator<ValidationContext<V>> validator) {
-
-        if (!isCurrentToBeCheckedItemNull()) {
-            ValidationContext<V> validationContext = new ValidationContext<V>(context, validationResult.getCompletePath(), buildCompleteLocation(
-                    validationResult.getLocation(), context), getter.apply(currentItemToBeChecked));
-            ValidationResult result = validator.validate(validationContext);
-            validationResult.register(result);
-        }
-        registerWhenItemIsNullButNotOptional();
-        return (T) this;
-    }
-
-    @SuppressWarnings("unchecked")
-    public <V> T validateCollection(String context, Function<U, Collection<V>> getter, Validator<CollectionValidationContext<V>> validator) {
-        if (!isCurrentToBeCheckedItemNull()) {
-            CollectionValidationContext<V> validationContext = new CollectionValidationContext<V>(context, validationResult.getCompletePath(),
-                    buildCompleteLocation(validationResult.getLocation(), context), getter.apply(currentItemToBeChecked));
-            ValidationResult result = validator.validate(validationContext);
-            validationResult.register(result);
-        }
-        registerWhenItemIsNullButNotOptional();
-        return (T) this;
-    }
-
-    @SuppressWarnings("unchecked")
-    public T validateString(String context, Function<U, String> getter, ValidateResultEvaluator<StringValidationContext> validator) {
-
-        if (!isCurrentToBeCheckedItemNull()) {
-            StringValidationContext validationContext = new StringValidationContext(context, validationResult.getCompletePath(),
-                    buildCompleteLocation(validationResult.getLocation(), context), getter.apply(currentItemToBeChecked));
-            ValidationResult result = validator.validate(validationContext).result();
-            validationResult.register(result);
-        }
-        registerWhenItemIsNullButNotOptional();
-        return (T) this;
-    }
-
-    @SuppressWarnings("unchecked")
-    public T validateString(String context, Function<U, String> getter, int length, Required required) {
-
-        if (!isCurrentToBeCheckedItemNull()) {
-            StringValidationContext validationContext = new StringValidationContext(context, validationResult.getCompletePath(),
-                    buildCompleteLocation(validationResult.getLocation(), context), getter.apply(currentItemToBeChecked));
-
-            switch (required) {
-            case Mandatory:
-                validationContext.failWhenMissing();
-                break;
-            case Optional:
-                validationContext.asOptional();
-                break;
-            }
-
-            ValidationResult result = validationContext.failWhenLongerThan(length).result();
-            validationResult.register(result);
+    public T failWhen(Predicate<U> predicate, String failureCode, String message, Object... objects) {
+        if (!isCurrentToBeCheckedItemNull() && predicate.test(currentItemToBeChecked)) {
+            validationResult.registerValidationFailure(failureCode, message, objects);
         }
         registerWhenItemIsNullButNotOptional();
         return (T) this;
@@ -124,15 +50,6 @@ public class AbstractValidationContext<T extends AbstractValidationContext<T, U>
             validationResult.registerNullValidation(MISSING, "is null");
         }
 
-        return (T) this;
-    }
-
-    @SuppressWarnings("unchecked")
-    public T failWhen(Predicate<U> predicate, String failureCode, String message, Object... objects) {
-        if (!isCurrentToBeCheckedItemNull() && predicate.test(currentItemToBeChecked)) {
-            validationResult.registerValidationFailure(failureCode, message, objects);
-        }
-        registerWhenItemIsNullButNotOptional();
         return (T) this;
     }
 
@@ -174,7 +91,7 @@ public class AbstractValidationContext<T extends AbstractValidationContext<T, U>
         this.validationResult.register(validationResult);
     }
 
-    private String buildCompleteLocation(String location, String context) {
+    protected String buildCompleteLocation(String location, String context) {
         return Joiner.on(".").join(location, context);
     }
 }
