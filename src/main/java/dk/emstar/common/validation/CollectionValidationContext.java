@@ -4,10 +4,6 @@ import java.util.Collection;
 
 public class CollectionValidationContext<T> extends ValidationContext<CollectionValidationContext<T>, Collection<T>> {
 
-    public CollectionValidationContext(String context, Collection<T> currentItemToBeChecked) {
-        super(context, currentItemToBeChecked);
-    }
-
     public CollectionValidationContext(String context, String contextPath, String location, Collection<T> currentItemToBeChecked) {
         super(context, contextPath, location, currentItemToBeChecked);
     }

@@ -88,5 +88,15 @@ public class ObjectValidationContext<T> extends ValidationContext<ObjectValidati
         registerWhenItemIsNullButNotOptional();
         return this;
     }
-    
+
+    // validateMap // has hasNot
+    // validateInt // between greaterThan greatherOrEqual lessThan or lessOrEqualThan
+    // validateLong  // between greaterThan greatherOrEqual lessThan or lessOrEqualThan
+    // validateLocalDate      // between later before
+    // validateLocalDateTime  // between later before
+    // validateLocalTime      // between later before
+    // validateZonedDate      // between later before
+    // validateZonedDateTime  // between later before
+    // validateZonedTime      // between later before
+
 }

@@ -2,10 +2,6 @@ package dk.emstar.common.validation;
 
 
 public class ValidationException extends RuntimeException {
-
-    /**
-     * 
-     */
     private static final long serialVersionUID = 7449469069625127238L;
     private final String validationCode;
     private final ValidationResult validationResult;

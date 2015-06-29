@@ -18,6 +18,7 @@ public class ValidationContext<T extends ValidationContext<T, U>, U> implements 
         this.validationResult = new ValidationResult(context, contextPath, location);
     }
 
+    // TODO this should be tested when marked mandatory and optional
     @SuppressWarnings("unchecked")
     public T failWhen(Predicate<U> predicate, String failureCode, String message, Object... objects) {
         if (!isCurrentToBeCheckedItemNull() && predicate.test(currentItemToBeChecked)) {
@@ -27,17 +28,6 @@ public class ValidationContext<T extends ValidationContext<T, U>, U> implements 
         return (T) this;
     }
 
-    // validateMap // has hasNot
-    // validateInt // between greaterThan greatherOrEqual lessThan or lessOrEqualThan
-    // validateLong  // between greaterThan greatherOrEqual lessThan or lessOrEqualThan
-    // validateLocalDate      // between later before
-    // validateLocalDateTime  // between later before
-    // validateLocalTime      // between later before
-    // validateZonedDate      // between later before
-    // validateZonedDateTime  // between later before
-    // validateZonedTime      // between later before
-    
-    
     @SuppressWarnings("unchecked")
     public T asOptional() {
         isOptional = true;
