@@ -1,6 +1,9 @@
 package dk.emstar.common.validation;
 
+import java.util.Collection;
 import java.util.regex.Pattern;
+
+import com.google.common.base.Strings;
 
 public class StringValidationContext extends AbstractValidationContext<StringValidationContext, String> {
     public StringValidationContext(String context, String contextPath, String location, String currentItemToBeChecked) {
@@ -19,25 +22,38 @@ public class StringValidationContext extends AbstractValidationContext<StringVal
         return this;
     }
 
-    public StringValidationContext failNotMatching(Pattern pattern) {
-        if (!isCurrentToBeCheckedItemNull()) {
-            if (!pattern.matcher(getCurrentItemToBeChecked()).matches()) {
-                registerAsFailure(MISMATCH, "not matching", getCurrentItemToBeChecked());
-            }
-        }
-
-        registerWhenItemIsNullButNotOptional();
+    public StringValidationContext failWhenNotMatching(Pattern pattern) {
+        if(!(isOptional() && isCurrentToBeCheckedItemNull()) && 
+                (isCurrentToBeCheckedItemNull() || !pattern.matcher(getCurrentItemToBeChecked()).matches())) {
+            registerAsFailure(MISMATCH, "not matching", getCurrentItemToBeChecked());
+        } 
 
         return this;
     }
     
+    public StringValidationContext failWhenNotIn(Collection<String> items) {
+        if(!(isOptional() && isCurrentToBeCheckedItemNull()) && 
+                (isCurrentToBeCheckedItemNull() || !items.contains(getCurrentItemToBeChecked()))) {
+            registerAsFailure(MISMATCH, "not matching", getCurrentItemToBeChecked());
+        } 
+
+        return this;
+    }
     
-    // failWhenMatching
-    // TODO within a set
-    // failWhenIn
-    // failWhenNotIn
-    // failWhenMissingOrEmpty()
+    public StringValidationContext failWhenIn(Collection<String> items) {
+        if(!(isOptional() && isCurrentToBeCheckedItemNull()) && 
+                (isCurrentToBeCheckedItemNull() || items.contains(getCurrentItemToBeChecked()))) {
+            registerAsFailure(MISMATCH, "not matching", getCurrentItemToBeChecked());
+        } 
+
+        return this;
+    }
     
-    
-    
+    public StringValidationContext failWhenMissingOrEmpty() {
+        if(Strings.isNullOrEmpty(getCurrentItemToBeChecked())) {
+            registerAsFailure(MISMATCH, "not matching", getCurrentItemToBeChecked());
+        } 
+
+        return this;
+    }
 }

@@ -24,6 +24,9 @@ public class ValidationContextTest {
         ValidationResult actual = new ValidationContext<Order>("order", order).result();
 
         assertThat(actual.hasFailure(), is(false));
+        assertThat(actual.getContext(), is(equalTo("order")));
+        assertThat(actual.getCompletePath(), is(equalTo("order")));
+        assertThat(actual.getLocation(), is(equalTo("order")));
     }
 
     @Test
