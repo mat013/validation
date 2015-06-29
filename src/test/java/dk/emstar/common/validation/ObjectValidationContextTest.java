@@ -15,13 +15,13 @@ import dk.emstar.common.validation.domain.Order;
 import dk.emstar.common.validation.domain.OrderLine;
 import dk.emstar.common.validation.domain.Person;
 
-public class ValidationContextTest {
+public class ObjectValidationContextTest {
 
     @Test
     public void result_NoValidation_NoFailure() throws Exception {
         Order order = new Order();
 
-        ValidationResult actual = new ValidationContext<Order>("order", order).result();
+        ValidationResult actual = new ObjectValidationContext<Order>("order", order).result();
 
         assertThat(actual.hasFailure(), is(false));
         assertThat(actual.getContext(), is(equalTo("order")));
@@ -31,7 +31,7 @@ public class ValidationContextTest {
 
     @Test
     public void result_Null_HasMissingOrder() throws Exception {
-        ValidationResult result = new ValidationContext<Order>("order", null)
+        ValidationResult result = new ObjectValidationContext<Order>("order", null)
             .failWhenMissing()
             .result();
 
@@ -47,7 +47,7 @@ public class ValidationContextTest {
 
     @Test
     public void asOptional_Null_WillNotFail() throws Exception {
-        ValidationResult actual = new ValidationContext<Order>("order", null)
+        ValidationResult actual = new ObjectValidationContext<Order>("order", null)
             .asOptional()
             .evaluate("customer", Order::getCustomer, customer -> customer)
             .result();
@@ -57,7 +57,7 @@ public class ValidationContextTest {
 
     @Test
     public void validate_NoOrder_RegisterWarningItemIsNotMarkedAsOptional() throws Exception {
-        ValidationResult result = new ValidationContext<Order>("order", null)
+        ValidationResult result = new ObjectValidationContext<Order>("order", null)
             .evaluate("customer", Order::getCustomer,
                     customer -> customer)
             .result();
@@ -75,7 +75,7 @@ public class ValidationContextTest {
     public void validate_OrderNoCustomer_RegisterAsMissingCustomer() throws Exception {
         Order order = new Order();
 
-        ValidationResult result = new ValidationContext<Order>("order", order)
+        ValidationResult result = new ObjectValidationContext<Order>("order", order)
             .failWhenMissing()
             .evaluate("customer", Order::getCustomer, 
                 customer -> customer
@@ -98,7 +98,7 @@ public class ValidationContextTest {
         Person person = new Person();
         order.setCustomer(person);
 
-        ValidationResult result = new ValidationContext<Order>("order", order)
+        ValidationResult result = new ObjectValidationContext<Order>("order", order)
             .failWhenMissing()
             .evaluate("customer", Order::getCustomer,
                     customer -> customer
@@ -125,7 +125,7 @@ public class ValidationContextTest {
         person.setFirstname("abc");
         order.setCustomer(person);
 
-        ValidationResult result = new ValidationContext<Order>("order", order)
+        ValidationResult result = new ObjectValidationContext<Order>("order", order)
             .failWhenMissing()
             .evaluate("customer", Order::getCustomer,
                 customer -> customer
@@ -157,7 +157,7 @@ public class ValidationContextTest {
         order.setCustomer(person);
         order.setOrderLine(Lists.newArrayList());
 
-        ValidationResult result = new ValidationContext<Order>("order", order)
+        ValidationResult result = new ObjectValidationContext<Order>("order", order)
             .failWhenMissing()
             .evaluate("customer", Order::getCustomer,
                 customer -> customer
@@ -193,7 +193,7 @@ public class ValidationContextTest {
         orderLines.add(null);
         order.setOrderLine(orderLines);
 
-        ValidationResult result = new ValidationContext<Order>("order", order)
+        ValidationResult result = new ObjectValidationContext<Order>("order", order)
             .failWhenMissing()
             .evaluate("customer", Order::getCustomer,
                 customer -> customer
@@ -231,7 +231,7 @@ public class ValidationContextTest {
         orderLines.add(orderLine);
         order.setOrderLine(orderLines);
 
-        ValidationResult result = new ValidationContext<Order>("order", order)
+        ValidationResult result = new ObjectValidationContext<Order>("order", order)
             .failWhenMissing()
             .evaluate("customer", Order::getCustomer,
                 customer -> customer
@@ -267,7 +267,7 @@ public class ValidationContextTest {
         Person person = new Person();
         order.setCustomer(person);
 
-        ValidationResult result = new ValidationContext<Order>("order", order)
+        ValidationResult result = new ObjectValidationContext<Order>("order", order)
             .failWhenMissing()
             .evaluate("customer", Order::getCustomer,
                 customer -> customer
@@ -290,7 +290,7 @@ public class ValidationContextTest {
         person.setBillingAddress(new Address());
         order.setCustomer(person);
 
-        ValidationResult result = new ValidationContext<Order>("order", order)
+        ValidationResult result = new ObjectValidationContext<Order>("order", order)
             .failWhenMissing()
             .evaluate("customer", Order::getCustomer,
                 customer -> customer
@@ -323,7 +323,7 @@ public class ValidationContextTest {
 
         order.setCustomer(person);
 
-        ValidationResult result = new ValidationContext<Order>("order", order)
+        ValidationResult result = new ObjectValidationContext<Order>("order", order)
             .failWhenMissing()
             .evaluate("customer", Order::getCustomer,
                 customer -> customer
@@ -356,7 +356,7 @@ public class ValidationContextTest {
         person.setBillingAddress(billingAddress);
         order.setCustomer(person);
 
-        ValidationResult actual = new ValidationContext<Order>("order", order)
+        ValidationResult actual = new ObjectValidationContext<Order>("order", order)
             .failWhenMissing()
             .evaluate("customer", Order::getCustomer,
                 customer -> customer
@@ -383,7 +383,7 @@ public class ValidationContextTest {
         person.setBillingAddress(billingAddress);
         order.setCustomer(person);
 
-        ValidationResult actual = new ValidationContext<Order>("order", order)
+        ValidationResult actual = new ObjectValidationContext<Order>("order", order)
             .failWhenMissing()
             .evaluate("customer", Order::getCustomer,
                 customer -> customer
@@ -414,7 +414,7 @@ public class ValidationContextTest {
         person.setBillingAddress(billingAddress);
         order.setCustomer(person);
 
-        ValidationResult result = new ValidationContext<Order>("order", order)
+        ValidationResult result = new ObjectValidationContext<Order>("order", order)
             .failWhenMissing()
             .evaluate("customer", Order::getCustomer,
                 customer -> customer
@@ -450,7 +450,7 @@ public class ValidationContextTest {
         Person person = new Person();
         order.setCustomer(person);
 
-        ValidationResult result = new ValidationContext<Order>("order", order)
+        ValidationResult result = new ObjectValidationContext<Order>("order", order)
             .failWhenMissing()
             .evaluate("customer", Order::getCustomer,
                 $customer -> $customer
@@ -475,7 +475,7 @@ public class ValidationContextTest {
         person.setFirstname("funny bunny");
         order.setCustomer(person);
 
-        ValidationResult result = new ValidationContext<Order>("order", order)
+        ValidationResult result = new ObjectValidationContext<Order>("order", order)
             .failWhenMissing()
             .evaluate("customer", Order::getCustomer,
                 $customer -> $customer
@@ -499,7 +499,7 @@ public class ValidationContextTest {
         person.setFirstname("funny");
         order.setCustomer(person);
 
-        ValidationResult actual = new ValidationContext<Order>("order", order)
+        ValidationResult actual = new ObjectValidationContext<Order>("order", order)
             .failWhenMissing()
             .evaluate("customer", Order::getCustomer,
                 $customer -> $customer

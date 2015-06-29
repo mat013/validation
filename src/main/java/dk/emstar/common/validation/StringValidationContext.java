@@ -5,7 +5,7 @@ import java.util.regex.Pattern;
 
 import com.google.common.base.Strings;
 
-public class StringValidationContext extends AbstractValidationContext<StringValidationContext, String> {
+public class StringValidationContext extends ValidationContext<StringValidationContext, String> {
     public StringValidationContext(String context, String contextPath, String location, String currentItemToBeChecked) {
         super(context, contextPath, location, currentItemToBeChecked);
     }
