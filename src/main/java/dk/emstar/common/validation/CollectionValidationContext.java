@@ -40,5 +40,6 @@ public class CollectionValidationContext<T> extends ValidationContext<Collection
     
     // failWhenHas
     // failWhenHasNot
+    // failWhenHasDuplicate
 
 }
