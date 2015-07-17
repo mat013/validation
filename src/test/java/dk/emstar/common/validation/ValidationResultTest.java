@@ -1,6 +1,7 @@
 package dk.emstar.common.validation;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.StrictAssertions.assertThat;
 
 import java.util.List;
 import java.util.Optional;
@@ -12,15 +13,11 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.google.common.collect.Lists;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ValidationResultTest {
-
-    private static final Logger logger = LoggerFactory.getLogger(ValidationResultTest.class);
 
     private ValidationResult validationResult;
 
@@ -40,7 +37,7 @@ public class ValidationResultTest {
         validationResult.registerValidationFailure("12", "input contains test", "test");
         validationResult.registerValidationFailure("13", "input contains test and test2", "test", "test2");
 
-        validationResult.throwIncludeAllMessagesWhenAnyFailures("10", logger);
+        validationResult.throwIncludeAllMessagesWhenAnyFailures("10");
     }
 
     @Test
@@ -52,7 +49,7 @@ public class ValidationResultTest {
         validationResult.registerValidationFailure("13", "input contains test and test2", "test", "test2");
 
         try {
-            validationResult.throwForFirstFoundWhenAnyFailures(logger);
+            validationResult.throwForFirstFoundWhenAnyFailures();
         } catch (ValidationException e) {
             assertThat(e.getValidationCode()).isEqualTo("11");
             throw e;
@@ -61,7 +58,7 @@ public class ValidationResultTest {
 
     @Test
     public void throwIncludeAllMessagesWhenAnyFailures_NoRegistrations_ExceptionIsNotThrown() throws Exception {
-        validationResult.throwIncludeAllMessagesWhenAnyFailures("10", logger);
+        validationResult.throwIncludeAllMessagesWhenAnyFailures("10");
     }
 
     @Test
