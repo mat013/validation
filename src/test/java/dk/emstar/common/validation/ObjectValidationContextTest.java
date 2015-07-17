@@ -1,8 +1,6 @@
 package dk.emstar.common.validation;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.is;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
 
@@ -23,10 +21,10 @@ public class ObjectValidationContextTest {
 
         ValidationResult actual = new ObjectValidationContext<Order>("order", order).result();
 
-        assertThat(actual.hasFailure(), is(false));
-        assertThat(actual.getContext(), is(equalTo("order")));
-        assertThat(actual.getCompletePath(), is(equalTo("order")));
-        assertThat(actual.getLocation(), is(equalTo("order")));
+        assertThat(actual.hasFailure()).isFalse();
+        assertThat(actual.getContext()).isEqualTo("order");
+        assertThat(actual.getCompletePath()).isEqualTo("order");
+        assertThat(actual.getLocation()).isEqualTo("order");
     }
 
     @Test
@@ -35,14 +33,14 @@ public class ObjectValidationContextTest {
             .failWhenMissing()
             .result();
 
-        assertThat(result.hasFailure(), is(true));
-        assertThat(result.stream().count(), is(1l));
+        assertThat(result.hasFailure()).isTrue();
+        assertThat(result.stream().count()).isEqualTo(1);
         ValidationRegistration actual = result.stream().findFirst().get();
 
-        assertThat(actual.getContext(), is(equalTo("order")));
-        assertThat(actual.getContextPath(), is(equalTo("order")));
-        assertThat(actual.getLocation(), is(equalTo("order")));
-        assertThat(actual.getValidationCode(), is(ValidationResultProvider.MISSING));
+        assertThat(actual.getContext()).isEqualTo("order");
+        assertThat(actual.getContextPath()).isEqualTo("order");
+        assertThat(actual.getLocation()).isEqualTo("order");
+        assertThat(actual.getValidationCode()).isEqualTo(ValidationResultProvider.MISSING);
     }
 
     @Test
@@ -52,7 +50,7 @@ public class ObjectValidationContextTest {
             .evaluate("customer", Order::getCustomer, customer -> customer)
             .result();
 
-        assertThat(actual.hasFailure(), is(false));
+        assertThat(actual.hasFailure()).isFalse();
     }
 
     @Test
@@ -62,13 +60,13 @@ public class ObjectValidationContextTest {
                     customer -> customer)
             .result();
 
-        assertThat(result.hasWarning(), is(true));
+        assertThat(result.hasWarning()).isTrue();
         ValidationRegistration actual = result.stream().findFirst().get();
 
-        assertThat(actual.getContext(), is(equalTo("order")));
-        assertThat(actual.getContextPath(), is(equalTo("order")));
-        assertThat(actual.getLocation(), is(equalTo("order")));
-        assertThat(actual.getValidationCode(), is(ValidationResultProvider.NOT_MARKED_AS_OPTIONAL));
+        assertThat(actual.getContext()).isEqualTo("order");
+        assertThat(actual.getContextPath()).isEqualTo("order");
+        assertThat(actual.getLocation()).isEqualTo("order");
+        assertThat(actual.getValidationCode()).isEqualTo(ValidationResultProvider.NOT_MARKED_AS_OPTIONAL);
     }
 
     @Test
@@ -82,14 +80,14 @@ public class ObjectValidationContextTest {
                     .failWhenMissing())
                     .result();
 
-        assertThat(result.hasFailure(), is(true));
-        assertThat(result.stream().count(), is(1l));
+        assertThat(result.hasFailure()).isTrue();
+        assertThat(result.stream().count()).isEqualTo(1);
         ValidationRegistration actual = result.stream().findFirst().get();
 
-        assertThat(actual.getContext(), is(equalTo("customer")));
-        assertThat(actual.getContextPath(), is(equalTo("order.customer")));
-        assertThat(actual.getLocation(), is(equalTo("order.customer")));
-        assertThat(actual.getValidationCode(), is(ValidationResultProvider.MISSING));
+        assertThat(actual.getContext()).isEqualTo("customer");
+        assertThat(actual.getContextPath()).isEqualTo("order.customer");
+        assertThat(actual.getLocation()).isEqualTo("order.customer");
+        assertThat(actual.getValidationCode()).isEqualTo(ValidationResultProvider.MISSING);
     }
 
     @Test
@@ -108,14 +106,14 @@ public class ObjectValidationContextTest {
                                 .failWhenMissing()))
             .result();
 
-        assertThat(result.hasFailure(), is(true));
-        assertThat(result.stream().count(), is(1l));
+        assertThat(result.hasFailure()).isTrue();
+        assertThat(result.stream().count()).isEqualTo(1);
         ValidationRegistration actual = result.stream().findFirst().get();
 
-        assertThat(actual.getContext(), is(equalTo("firstname")));
-        assertThat(actual.getContextPath(), is(equalTo("order.customer.firstname")));
-        assertThat(actual.getLocation(), is(equalTo("order.customer.firstname")));
-        assertThat(actual.getValidationCode(), is(ValidationResultProvider.MISSING));
+        assertThat(actual.getContext()).isEqualTo("firstname");
+        assertThat(actual.getContextPath()).isEqualTo("order.customer.firstname");
+        assertThat(actual.getLocation()).isEqualTo("order.customer.firstname");
+        assertThat(actual.getValidationCode()).isEqualTo(ValidationResultProvider.MISSING);
     }
 
     @Test
@@ -138,14 +136,14 @@ public class ObjectValidationContextTest {
                     .failWhenMissing())
             .result();
 
-        assertThat(result.hasFailure(), is(true));
-        assertThat(result.stream().count(), is(1l));
+        assertThat(result.hasFailure()).isTrue();
+        assertThat(result.stream().count()).isEqualTo(1);
         ValidationRegistration actual = result.stream().findFirst().get();
 
-        assertThat(actual.getContext(), is(equalTo("orderlines")));
-        assertThat(actual.getContextPath(), is(equalTo("order.orderlines")));
-        assertThat(actual.getLocation(), is(equalTo("order.orderlines")));
-        assertThat(actual.getValidationCode(), is(ValidationResultProvider.MISSING));
+        assertThat(actual.getContext()).isEqualTo("orderlines");
+        assertThat(actual.getContextPath()).isEqualTo("order.orderlines");
+        assertThat(actual.getLocation()).isEqualTo("order.orderlines");
+        assertThat(actual.getValidationCode()).isEqualTo(ValidationResultProvider.MISSING);
     }
 
     @Test
@@ -172,14 +170,14 @@ public class ObjectValidationContextTest {
                         .failWhenEmpty())
             .result();
 
-        assertThat(result.hasFailure(), is(true));
-        assertThat(result.stream().count(), is(1l));
+        assertThat(result.hasFailure()).isTrue();
+        assertThat(result.stream().count()).isEqualTo(1);
         ValidationRegistration actual = result.stream().findFirst().get();
 
-        assertThat(actual.getContext(), is(equalTo("orderlines")));
-        assertThat(actual.getContextPath(), is(equalTo("order.orderlines")));
-        assertThat(actual.getLocation(), is(equalTo("order.orderlines")));
-        assertThat(actual.getValidationCode(), is(ValidationResultProvider.IS_EMPTY));
+        assertThat(actual.getContext()).isEqualTo("orderlines");
+        assertThat(actual.getContextPath()).isEqualTo("order.orderlines");
+        assertThat(actual.getLocation()).isEqualTo("order.orderlines");
+        assertThat(actual.getValidationCode()).isEqualTo(ValidationResultProvider.IS_EMPTY);
     }
 
     @Test
@@ -210,14 +208,14 @@ public class ObjectValidationContextTest {
                                 .failWhenMissing()))
             .result();
 
-        assertThat(result.hasFailure(), is(true));
-        assertThat(result.stream().count(), is(1l));
+        assertThat(result.hasFailure()).isTrue();
+        assertThat(result.stream().count()).isEqualTo(1l);
         ValidationRegistration actual = result.stream().findFirst().get();
 
-        assertThat(actual.getContext(), is(equalTo("orderline")));
-        assertThat(actual.getContextPath(), is(equalTo("order.orderlines.orderline")));
-        assertThat(actual.getLocation(), is(equalTo("order.orderlines[0]")));
-        assertThat(actual.getValidationCode(), is(ValidationResultProvider.MISSING));
+        assertThat(actual.getContext()).isEqualTo("orderline");
+        assertThat(actual.getContextPath()).isEqualTo("order.orderlines.orderline");
+        assertThat(actual.getLocation()).isEqualTo("order.orderlines[0]");
+        assertThat(actual.getValidationCode()).isEqualTo(ValidationResultProvider.MISSING);
     }
 
     @Test
@@ -251,14 +249,14 @@ public class ObjectValidationContextTest {
                                     .failWhenMissing())))
             .result();
 
-        assertThat(result.hasFailure(), is(true));
-        assertThat(result.stream().count(), is(1l));
+        assertThat(result.hasFailure()).isTrue();
+        assertThat(result.stream().count()).isEqualTo(1l);
         ValidationRegistration actual = result.stream().findFirst().get();
 
-        assertThat(actual.getContext(), is(equalTo("itemCode")));
-        assertThat(actual.getContextPath(), is(equalTo("order.orderlines.orderline.itemCode")));
-        assertThat(actual.getLocation(), is(equalTo("order.orderlines[0].itemCode")));
-        assertThat(actual.getValidationCode(), is(ValidationResultProvider.MISSING));
+        assertThat(actual.getContext()).isEqualTo("itemCode");
+        assertThat(actual.getContextPath()).isEqualTo("order.orderlines.orderline.itemCode");
+        assertThat(actual.getLocation()).isEqualTo("order.orderlines[0].itemCode");
+        assertThat(actual.getValidationCode()).isEqualTo(ValidationResultProvider.MISSING);
     }
 
     @Test
@@ -280,7 +278,7 @@ public class ObjectValidationContextTest {
                                     .failWhenMissing())))
             .result();
 
-        assertThat(result.hasFailure(), is(false));
+        assertThat(result.hasFailure()).isFalse();
     }
 
     @Test
@@ -303,14 +301,14 @@ public class ObjectValidationContextTest {
                                         .failWhenMissing())))
             .result();
 
-        assertThat(result.hasFailure(), is(true));
-        assertThat(result.stream().count(), is(1l));
+        assertThat(result.hasFailure()).isTrue();
+        assertThat(result.stream().count()).isEqualTo(1);
         ValidationRegistration actual = result.stream().findFirst().get();
 
-        assertThat(actual.getContext(), is(equalTo("addressline1")));
-        assertThat(actual.getContextPath(), is(equalTo("order.customer.billingAddress.addressline1")));
-        assertThat(actual.getLocation(), is(equalTo("order.customer.billingAddress.addressline1")));
-        assertThat(actual.getValidationCode(), is(ValidationResultProvider.MISSING));
+        assertThat(actual.getContext()).isEqualTo("addressline1");
+        assertThat(actual.getContextPath()).isEqualTo("order.customer.billingAddress.addressline1");
+        assertThat(actual.getLocation()).isEqualTo("order.customer.billingAddress.addressline1");
+        assertThat(actual.getValidationCode()).isEqualTo(ValidationResultProvider.MISSING);
     }
 
     @Test
@@ -337,14 +335,14 @@ public class ObjectValidationContextTest {
                                     .failWhenLongerThan(10))))
             .result();
 
-        assertThat(result.hasFailure(), is(true));
-        assertThat(result.stream().count(), is(1l));
+        assertThat(result.hasFailure()).isTrue();
+        assertThat(result.stream().count()).isEqualTo(1);
         ValidationRegistration actual = result.stream().findFirst().get();
 
-        assertThat(actual.getContext(), is(equalTo("addressline1")));
-        assertThat(actual.getContextPath(), is(equalTo("order.customer.billingAddress.addressline1")));
-        assertThat(actual.getLocation(), is(equalTo("order.customer.billingAddress.addressline1")));
-        assertThat(actual.getValidationCode(), is(ValidationResultProvider.TOO_LONG));
+        assertThat(actual.getContext()).isEqualTo("addressline1");
+        assertThat(actual.getContextPath()).isEqualTo("order.customer.billingAddress.addressline1");
+        assertThat(actual.getLocation()).isEqualTo("order.customer.billingAddress.addressline1");
+        assertThat(actual.getValidationCode()).isEqualTo(ValidationResultProvider.TOO_LONG);
     }
 
     @Test
@@ -370,7 +368,7 @@ public class ObjectValidationContextTest {
                                     .failWhenLongerThan(30))))
             .result();
 
-        assertThat(actual.hasFailure(), is(false));
+        assertThat(actual.hasFailure()).isFalse();
     }
 
     @Test
@@ -402,7 +400,7 @@ public class ObjectValidationContextTest {
                                 })))
             .result();
 
-        assertThat(actual.hasFailure(), is(false));
+        assertThat(actual.hasFailure()).isFalse();
     }
 
     @Test
@@ -434,14 +432,14 @@ public class ObjectValidationContextTest {
                             })))
             .result();
 
-        assertThat(result.hasFailure(), is(true));
-        assertThat(result.stream().count(), is(1l));
+        assertThat(result.hasFailure()).isTrue();
+        assertThat(result.stream().count()).isEqualTo(1);
         ValidationRegistration actual = result.stream().findFirst().get();
 
-        assertThat(actual.getContext(), is(equalTo("addressline1")));
-        assertThat(actual.getContextPath(), is(equalTo("order.customer.billingAddress.addressline1")));
-        assertThat(actual.getLocation(), is(equalTo("order.customer.billingAddress.addressline1")));
-        assertThat(actual.getValidationCode(), is(ValidationResultProvider.MISSING));
+        assertThat(actual.getContext()).isEqualTo("addressline1");
+        assertThat(actual.getContextPath()).isEqualTo("order.customer.billingAddress.addressline1");
+        assertThat(actual.getLocation()).isEqualTo("order.customer.billingAddress.addressline1");
+        assertThat(actual.getValidationCode()).isEqualTo(ValidationResultProvider.MISSING);
     }
 
     @Test
@@ -457,14 +455,14 @@ public class ObjectValidationContextTest {
                     .validateString("firstname", Person::getFirstname, 5, Required.Mandatory))
             .result();
 
-        assertThat(result.hasFailure(), is(true));
-        assertThat(result.stream().filter(o -> ValidationLevel.Failure.equals(o.getValidationLevel())).count(), is(1l));
+        assertThat(result.hasFailure()).isTrue();
+        assertThat(result.stream().filter(o -> ValidationLevel.Failure.equals(o.getValidationLevel())).count()).isEqualTo(1);
         ValidationRegistration actual = result.stream().findFirst().get();
 
-        assertThat(actual.getContext(), is(equalTo("firstname")));
-        assertThat(actual.getContextPath(), is(equalTo("order.customer.firstname")));
-        assertThat(actual.getLocation(), is(equalTo("order.customer.firstname")));
-        assertThat(actual.getValidationCode(), is(ValidationResultProvider.MISSING));
+        assertThat(actual.getContext()).isEqualTo("firstname");
+        assertThat(actual.getContextPath()).isEqualTo("order.customer.firstname");
+        assertThat(actual.getLocation()).isEqualTo("order.customer.firstname");
+        assertThat(actual.getValidationCode()).isEqualTo(ValidationResultProvider.MISSING);
 
     }
 
@@ -482,14 +480,14 @@ public class ObjectValidationContextTest {
                     .validateString("firstname", Person::getFirstname, 5, Required.Mandatory))
             .result();
 
-        assertThat(result.hasFailure(), is(true));
-        assertThat(result.stream().count(), is(1l));
+        assertThat(result.hasFailure()).isTrue();
+        assertThat(result.stream().count()).isEqualTo(1);
         ValidationRegistration actual = result.stream().findFirst().get();
 
-        assertThat(actual.getContext(), is(equalTo("firstname")));
-        assertThat(actual.getContextPath(), is(equalTo("order.customer.firstname")));
-        assertThat(actual.getLocation(), is(equalTo("order.customer.firstname")));
-        assertThat(actual.getValidationCode(), is(ValidationResultProvider.TOO_LONG));
+        assertThat(actual.getContext()).isEqualTo("firstname");
+        assertThat(actual.getContextPath()).isEqualTo("order.customer.firstname");
+        assertThat(actual.getLocation()).isEqualTo("order.customer.firstname");
+        assertThat(actual.getValidationCode()).isEqualTo(ValidationResultProvider.TOO_LONG);
     }
 
     @Test
@@ -506,7 +504,7 @@ public class ObjectValidationContextTest {
                     .validateString("firstname", Person::getFirstname, 5, Required.Mandatory))
             .result();
 
-        assertThat(actual.hasFailure(), is(false));
+        assertThat(actual.hasFailure()).isFalse();
 
     }
 }

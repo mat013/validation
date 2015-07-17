@@ -1,8 +1,6 @@
 package dk.emstar.common.validation;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.is;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.regex.Pattern;
 
@@ -24,14 +22,14 @@ public class StringValidationContextTest {
         Pattern pattern = Pattern.compile("\\d{2}-\\d{2}");
         ValidationResult result = stringValidationContext.failWhenNotMatching(pattern).result();
         
-        assertThat(result.hasFailure(), is(true));
-        assertThat(result.stream().filter(o -> ValidationLevel.Failure.equals(o.getValidationLevel())).count(), is(1l));
+        assertThat(result.hasFailure()).isTrue();
+        assertThat(result.stream().filter(o -> ValidationLevel.Failure.equals(o.getValidationLevel())).count()).isEqualTo(1);
         ValidationRegistration actual = result.stream().findFirst().get();
 
-        assertThat(actual.getContext(), is(equalTo("myVar")));
-        assertThat(actual.getContextPath(), is(equalTo("myVar")));
-        assertThat(actual.getLocation(), is(equalTo("myVar")));
-        assertThat(actual.getValidationCode(), is(ValidationResultProvider.MISMATCH));
+        assertThat(actual.getContext()).isEqualTo("myVar");
+        assertThat(actual.getContextPath()).isEqualTo("myVar");
+        assertThat(actual.getLocation()).isEqualTo("myVar");
+        assertThat(actual.getValidationCode()).isEqualTo(ValidationResultProvider.MISMATCH);
     }
 
     @Test
@@ -44,14 +42,14 @@ public class StringValidationContextTest {
         Pattern pattern = Pattern.compile("\\d{2}-\\d{2}");
         ValidationResult result = stringValidationContext.failWhenNotMatching(pattern).result();
         
-        assertThat(result.hasFailure(), is(true));
-        assertThat(result.stream().count(), is(1l));
+        assertThat(result.hasFailure()).isTrue();
+        assertThat(result.stream().count()).isEqualTo(1l);
         ValidationRegistration actual = result.stream().findFirst().get();
 
-        assertThat(actual.getContext(), is(equalTo("myVar")));
-        assertThat(actual.getContextPath(), is(equalTo("myVar")));
-        assertThat(actual.getLocation(), is(equalTo("myVar")));
-        assertThat(actual.getValidationCode(), is(ValidationResultProvider.MISMATCH));
+        assertThat(actual.getContext()).isEqualTo("myVar");
+        assertThat(actual.getContextPath()).isEqualTo("myVar");
+        assertThat(actual.getLocation()).isEqualTo("myVar");
+        assertThat(actual.getValidationCode()).isEqualTo(ValidationResultProvider.MISMATCH);
     }
 
     @Test
@@ -64,7 +62,7 @@ public class StringValidationContextTest {
         Pattern pattern = Pattern.compile("\\d{2}-\\d{2}");
         ValidationResult result = stringValidationContext.failWhenNotMatching(pattern).result();
         
-        assertThat(result.hasFailure(), is(false));
+        assertThat(result.hasFailure()).isEqualTo(false);
     }
     
     @Test
@@ -80,7 +78,7 @@ public class StringValidationContextTest {
                 .failWhenNotMatching(pattern)
                 .result();
         
-        assertThat(result.hasFailure(), is(false));
+        assertThat(result.hasFailure()).isEqualTo(false);
     }
     
     @Test
@@ -93,14 +91,14 @@ public class StringValidationContextTest {
 
         ValidationResult result = stringValidationContext.failWhenNotIn(Sets.newHashSet("a", "b")).result();
         
-        assertThat(result.hasFailure(), is(true));
-        assertThat(result.stream().filter(o -> ValidationLevel.Failure.equals(o.getValidationLevel())).count(), is(1l));
+        assertThat(result.hasFailure()).isTrue();
+        assertThat(result.stream().filter(o -> ValidationLevel.Failure.equals(o.getValidationLevel())).count()).isEqualTo(1);
         ValidationRegistration actual = result.stream().findFirst().get();
 
-        assertThat(actual.getContext(), is(equalTo("myVar")));
-        assertThat(actual.getContextPath(), is(equalTo("myVar")));
-        assertThat(actual.getLocation(), is(equalTo("myVar")));
-        assertThat(actual.getValidationCode(), is(ValidationResultProvider.MISMATCH));
+        assertThat(actual.getContext()).isEqualTo("myVar");
+        assertThat(actual.getContextPath()).isEqualTo("myVar");
+        assertThat(actual.getLocation()).isEqualTo("myVar");
+        assertThat(actual.getValidationCode()).isEqualTo(ValidationResultProvider.MISMATCH);
     }
 
     @Test
@@ -112,14 +110,14 @@ public class StringValidationContextTest {
         
         ValidationResult result = stringValidationContext.failWhenNotIn(Sets.newHashSet("a", "b")).result();
         
-        assertThat(result.hasFailure(), is(true));
-        assertThat(result.stream().count(), is(1l));
+        assertThat(result.hasFailure()).isTrue();
+        assertThat(result.stream().count()).isEqualTo(1l);
         ValidationRegistration actual = result.stream().findFirst().get();
 
-        assertThat(actual.getContext(), is(equalTo("myVar")));
-        assertThat(actual.getContextPath(), is(equalTo("myVar")));
-        assertThat(actual.getLocation(), is(equalTo("myVar")));
-        assertThat(actual.getValidationCode(), is(ValidationResultProvider.MISMATCH));
+        assertThat(actual.getContext()).isEqualTo("myVar");
+        assertThat(actual.getContextPath()).isEqualTo("myVar");
+        assertThat(actual.getLocation()).isEqualTo("myVar");
+        assertThat(actual.getValidationCode()).isEqualTo(ValidationResultProvider.MISMATCH);
     }
 
     @Test
@@ -131,7 +129,7 @@ public class StringValidationContextTest {
         
         ValidationResult result = stringValidationContext.failWhenNotIn(Sets.newHashSet("11-22", "b")).result();
         
-        assertThat(result.hasFailure(), is(false));
+        assertThat(result.hasFailure()).isFalse();
     }
     
     @Test
@@ -146,7 +144,7 @@ public class StringValidationContextTest {
                 .failWhenNotIn(Sets.newHashSet("a", "b"))
                 .result();
         
-        assertThat(result.hasFailure(), is(false));
+        assertThat(result.hasFailure()).isFalse();
     }
 
     @Test
@@ -158,14 +156,14 @@ public class StringValidationContextTest {
         
         ValidationResult result = stringValidationContext.failWhenIn(Sets.newHashSet("a", "b")).result();
         
-        assertThat(result.hasFailure(), is(true));
-        assertThat(result.stream().filter(o -> ValidationLevel.Failure.equals(o.getValidationLevel())).count(), is(1l));
+        assertThat(result.hasFailure()).isTrue();
+        assertThat(result.stream().filter(o -> ValidationLevel.Failure.equals(o.getValidationLevel())).count()).isEqualTo(1);
         ValidationRegistration actual = result.stream().findFirst().get();
 
-        assertThat(actual.getContext(), is(equalTo("myVar")));
-        assertThat(actual.getContextPath(), is(equalTo("myVar")));
-        assertThat(actual.getLocation(), is(equalTo("myVar")));
-        assertThat(actual.getValidationCode(), is(ValidationResultProvider.MISMATCH));
+        assertThat(actual.getContext()).isEqualTo("myVar");
+        assertThat(actual.getContextPath()).isEqualTo("myVar");
+        assertThat(actual.getLocation()).isEqualTo("myVar");
+        assertThat(actual.getValidationCode()).isEqualTo(ValidationResultProvider.MISMATCH);
     }
 
     @Test
@@ -177,14 +175,14 @@ public class StringValidationContextTest {
         
         ValidationResult result = stringValidationContext.failWhenIn(Sets.newHashSet("a", "b")).result();
         
-        assertThat(result.hasFailure(), is(true));
-        assertThat(result.stream().count(), is(1l));
+        assertThat(result.hasFailure()).isTrue();
+        assertThat(result.stream().count()).isEqualTo(1);
         ValidationRegistration actual = result.stream().findFirst().get();
 
-        assertThat(actual.getContext(), is(equalTo("myVar")));
-        assertThat(actual.getContextPath(), is(equalTo("myVar")));
-        assertThat(actual.getLocation(), is(equalTo("myVar")));
-        assertThat(actual.getValidationCode(), is(ValidationResultProvider.MISMATCH));
+        assertThat(actual.getContext()).isEqualTo("myVar");
+        assertThat(actual.getContextPath()).isEqualTo("myVar");
+        assertThat(actual.getLocation()).isEqualTo("myVar");
+        assertThat(actual.getValidationCode()).isEqualTo(ValidationResultProvider.MISMATCH);
     }
 
     @Test
@@ -196,7 +194,7 @@ public class StringValidationContextTest {
         
         ValidationResult result = stringValidationContext.failWhenIn(Sets.newHashSet("a", "b")).result();
         
-        assertThat(result.hasFailure(), is(false));
+        assertThat(result.hasFailure()).isFalse();
     }
     
     @Test
@@ -211,7 +209,7 @@ public class StringValidationContextTest {
                 .failWhenIn(Sets.newHashSet("a", "b"))
                 .result();
         
-        assertThat(result.hasFailure(), is(false));
+        assertThat(result.hasFailure()).isFalse();
     }
 
     @Test
@@ -223,14 +221,14 @@ public class StringValidationContextTest {
         
         ValidationResult result = stringValidationContext.failWhenMissingOrEmpty().result();
         
-        assertThat(result.hasFailure(), is(true));
-        assertThat(result.stream().count(), is(1l));
+        assertThat(result.hasFailure()).isTrue();
+        assertThat(result.stream().count()).isEqualTo(1l);
         ValidationRegistration actual = result.stream().findFirst().get();
 
-        assertThat(actual.getContext(), is(equalTo("myVar")));
-        assertThat(actual.getContextPath(), is(equalTo("myVar")));
-        assertThat(actual.getLocation(), is(equalTo("myVar")));
-        assertThat(actual.getValidationCode(), is(ValidationResultProvider.MISMATCH));
+        assertThat(actual.getContext()).isEqualTo("myVar");
+        assertThat(actual.getContextPath()).isEqualTo("myVar");
+        assertThat(actual.getLocation()).isEqualTo("myVar");
+        assertThat(actual.getValidationCode()).isEqualTo(ValidationResultProvider.MISMATCH);
     }
 
     @Test
@@ -242,14 +240,14 @@ public class StringValidationContextTest {
         
         ValidationResult result = stringValidationContext.failWhenMissingOrEmpty().result();
         
-        assertThat(result.hasFailure(), is(true));
-        assertThat(result.stream().count(), is(1l));
+        assertThat(result.hasFailure()).isTrue();
+        assertThat(result.stream().count()).isEqualTo(1);
         ValidationRegistration actual = result.stream().findFirst().get();
 
-        assertThat(actual.getContext(), is(equalTo("myVar")));
-        assertThat(actual.getContextPath(), is(equalTo("myVar")));
-        assertThat(actual.getLocation(), is(equalTo("myVar")));
-        assertThat(actual.getValidationCode(), is(ValidationResultProvider.MISMATCH));
+        assertThat(actual.getContext()).isEqualTo("myVar");
+        assertThat(actual.getContextPath()).isEqualTo("myVar");
+        assertThat(actual.getLocation()).isEqualTo("myVar");
+        assertThat(actual.getValidationCode()).isEqualTo(ValidationResultProvider.MISMATCH);
     }
 
     @Test
@@ -261,6 +259,6 @@ public class StringValidationContextTest {
         
         ValidationResult result = stringValidationContext.failWhenMissingOrEmpty().result();
         
-        assertThat(result.hasFailure(), is(false));
+        assertThat(result.hasFailure()).isFalse();
     }
 }

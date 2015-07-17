@@ -1,8 +1,6 @@
 package dk.emstar.common.validation;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.is;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
 import java.util.Optional;
@@ -56,7 +54,7 @@ public class ValidationResultTest {
         try {
             validationResult.throwForFirstFoundWhenAnyFailures(logger);
         } catch (ValidationException e) {
-            assertThat(e.getValidationCode(), is("11"));
+            assertThat(e.getValidationCode()).isEqualTo("11");
             throw e;
         }
     }
@@ -75,7 +73,7 @@ public class ValidationResultTest {
 
         List<ValidationRegistration> actual = Lists.newArrayList(validationResult.iterator());
         List<String> actualFailureCodes = actual.stream().map(o -> o.getValidationCode()).collect(Collectors.toList());
-        assertThat(actualFailureCodes, is(Lists.newArrayList("a", "b", "c")));
+        assertThat(actualFailureCodes).isEqualTo(Lists.newArrayList("a", "b", "c"));
     }
 
     @Test
@@ -91,8 +89,8 @@ public class ValidationResultTest {
 
         List<ValidationRegistration> actual = Lists.newArrayList(validationResult.iterator());
         List<String> actualFailureCodes = actual.stream().map(o -> o.getValidationCode()).collect(Collectors.toList());
-        assertThat(actualFailureCodes, is(Lists.newArrayList("a", "b1", "b2", "c")));
-        assertThat(validationResult.hasFailure(), is(equalTo(true)));
+        assertThat(actualFailureCodes).isEqualTo(Lists.newArrayList("a", "b1", "b2", "c"));
+        assertThat(validationResult.hasFailure()).isTrue();
     }
 
     @Test
@@ -107,8 +105,8 @@ public class ValidationResultTest {
 
         List<ValidationRegistration> actual = Lists.newArrayList(validationResult.iterator());
         List<String> actualFailureCodes = actual.stream().map(o -> o.getValidationCode()).collect(Collectors.toList());
-        assertThat(actualFailureCodes, is(Lists.newArrayList("a", "b1", "b2", "c")));
-        assertThat(validationResult.hasFailure(), is(equalTo(true)));
+        assertThat(actualFailureCodes).isEqualTo(Lists.newArrayList("a", "b1", "b2", "c"));
+        assertThat(validationResult.hasFailure()).isTrue();
     }
 
     @Test
@@ -123,8 +121,8 @@ public class ValidationResultTest {
 
         List<ValidationRegistration> actual = Lists.newArrayList(validationResult.iterator());
         List<String> actualFailureCodes = actual.stream().map(o -> o.getValidationCode()).collect(Collectors.toList());
-        assertThat(actualFailureCodes, is(Lists.newArrayList("a", "b1", "b2", "c")));
-        assertThat(validationResult.hasFailure(), is(equalTo(true)));
+        assertThat(actualFailureCodes).isEqualTo(Lists.newArrayList("a", "b1", "b2", "c"));
+        assertThat(validationResult.hasFailure()).isTrue();
     }
 
     @Test
@@ -142,8 +140,8 @@ public class ValidationResultTest {
                 .filter(o -> ValidationLevel.Failure.equals(o.getValidationLevel()))
                 .findFirst();
         
-        assertThat(actual.isPresent(), is(true));
-        assertThat(actual.get().getValidationCode(), is("b1"));
+        assertThat(actual.isPresent()).isTrue();
+        assertThat(actual.get().getValidationCode()).isEqualTo("b1");
     }
 
     @Test
@@ -161,6 +159,6 @@ public class ValidationResultTest {
                 .filter(o -> ValidationLevel.Failure.equals(o.getValidationLevel()))
                 .findFirst();
         
-        assertThat(actual.isPresent(), is(false));
+        assertThat(actual.isPresent()).isFalse();
     }
 }
