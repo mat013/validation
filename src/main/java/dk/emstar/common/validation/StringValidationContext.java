@@ -23,6 +23,10 @@ public class StringValidationContext extends ValidationContext<StringValidationC
     }
 
     public StringValidationContext failWhenNotMatching(Pattern pattern) {
+        if(pattern == null) {
+            throw new IllegalArgumentException("pattern is missing");
+        }
+        
         if(!(isOptional() && isCurrentToBeCheckedItemNull()) && 
                 (isCurrentToBeCheckedItemNull() || !pattern.matcher(getCurrentItemToBeChecked()).matches())) {
             registerAsFailure(MISMATCH, "not matching", getCurrentItemToBeChecked());
@@ -32,6 +36,10 @@ public class StringValidationContext extends ValidationContext<StringValidationC
     }
     
     public StringValidationContext failWhenNotIn(Collection<String> items) {
+        if(items == null) {
+            throw new IllegalArgumentException("items are missing");
+        }
+
         if(!(isOptional() && isCurrentToBeCheckedItemNull()) && 
                 (isCurrentToBeCheckedItemNull() || !items.contains(getCurrentItemToBeChecked()))) {
             registerAsFailure(MISMATCH, "not matching", getCurrentItemToBeChecked());
@@ -41,6 +49,10 @@ public class StringValidationContext extends ValidationContext<StringValidationC
     }
     
     public StringValidationContext failWhenIn(Collection<String> items) {
+        if(items == null) {
+            throw new IllegalArgumentException("items are missing");
+        }
+
         if(!(isOptional() && isCurrentToBeCheckedItemNull()) && 
                 (isCurrentToBeCheckedItemNull() || items.contains(getCurrentItemToBeChecked()))) {
             registerAsFailure(MISMATCH, "not matching", getCurrentItemToBeChecked());

@@ -14,8 +14,15 @@ public class ObjectValidationContext<T> extends ValidationContext<ObjectValidati
     }
 
     public <V> ObjectValidationContext<T> evaluate(Function<T, V> getter, ValidateResultEvaluator<V> validator) {
-
         if (!isCurrentToBeCheckedItemNull()) {
+            if(getter == null) {
+                throw new IllegalArgumentException("getter is missing");
+            }
+
+            if(validator == null) {
+                throw new IllegalArgumentException("validator is missing");
+            }
+
             ValidationResult result = validator.validate(getter.apply(getCurrentItemToBeChecked())).result();
             result().register(result);
         }
@@ -33,7 +40,15 @@ public class ObjectValidationContext<T> extends ValidationContext<ObjectValidati
     }
 
     public <V> ObjectValidationContext<T> validateCollection(String context, Function<T, Collection<V>> getter, Validator<CollectionValidationContext<V>> validator) {
+        if(validator == null) {
+            throw new IllegalArgumentException("validator is missing");
+        }
+
         if (!isCurrentToBeCheckedItemNull()) {
+            if(getter == null) {
+                throw new IllegalArgumentException("getter is missing");
+            }
+
             CollectionValidationContext<V> validationContext = new CollectionValidationContext<V>(context, result().getCompletePath(),
                     buildCompleteLocation(result().getLocation(), context), getter.apply(getCurrentItemToBeChecked()));
             ValidationResult result = validator.validate(validationContext);
@@ -44,8 +59,15 @@ public class ObjectValidationContext<T> extends ValidationContext<ObjectValidati
     }
 
     public ObjectValidationContext<T> validateString(String context, Function<T, String> getter, ValidateResultEvaluator<StringValidationContext> validator) {
+        if(validator == null) {
+            throw new IllegalArgumentException("validator is missing");
+        }
 
         if (!isCurrentToBeCheckedItemNull()) {
+            if(getter == null) {
+                throw new IllegalArgumentException("getter is missing");
+            }
+
             StringValidationContext validationContext = new StringValidationContext(context, result().getCompletePath(),
                     buildCompleteLocation(result().getLocation(), context), getter.apply(getCurrentItemToBeChecked()));
             ValidationResult result = validator.validate(validationContext).result();
@@ -58,8 +80,16 @@ public class ObjectValidationContext<T> extends ValidationContext<ObjectValidati
     public ObjectValidationContext<T> validateString(String context, Function<T, String> getter, int length, Required required) {
 
         if (!isCurrentToBeCheckedItemNull()) {
+            if(getter == null) {
+                throw new IllegalArgumentException("getter is missing");
+            }
+
             StringValidationContext validationContext = new StringValidationContext(context, result().getCompletePath(),
                     buildCompleteLocation(result().getLocation(), context), getter.apply(getCurrentItemToBeChecked()));
+
+            if(required == null) {
+                throw new IllegalArgumentException("required is missing");
+            }
 
             switch (required) {
             case Mandatory:
@@ -78,6 +108,9 @@ public class ObjectValidationContext<T> extends ValidationContext<ObjectValidati
     }
     
     public <V> ObjectValidationContext<T> validate(String context, Function<T, V> getter, Validator<ObjectValidationContext<V>> validator) {
+        if(validator == null) {
+            throw new IllegalArgumentException("validator is missing");
+        }
 
         if (!isCurrentToBeCheckedItemNull()) {
             ObjectValidationContext<V> validationContext = new ObjectValidationContext<V>(context, result().getCompletePath(), buildCompleteLocation(
@@ -93,7 +126,6 @@ public class ObjectValidationContext<T> extends ValidationContext<ObjectValidati
     // validateInt // between greaterThan greatherOrEqual lessThan or lessOrEqualThan
     // validateLong  // between greaterThan greatherOrEqual lessThan or lessOrEqualThan
     // validateLocalDate      // between later before
-    // validateLocalDateTime  // between later before
     // validateLocalTime      // between later before
     // validateZonedDate      // between later before
     // validateZonedDateTime  // between later before

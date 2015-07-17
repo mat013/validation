@@ -1,6 +1,6 @@
 package dk.emstar.common.validation;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.StrictAssertions.assertThat;
 
 import java.util.regex.Pattern;
 
