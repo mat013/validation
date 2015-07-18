@@ -1,6 +1,5 @@
 package dk.emstar.common.validation;
 
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -11,7 +10,7 @@ import java.util.stream.StreamSupport;
 import com.google.common.base.Joiner;
 import com.google.common.base.Strings;
 
-public class ValidationResult implements Iterable<ValidationRegistration>, AutoCloseable {
+public class ValidationResult implements Iterable<ValidationRegistration> {
 
     private static Object[] NULL_ARRAY = new Object[] {};
 
@@ -105,10 +104,6 @@ public class ValidationResult implements Iterable<ValidationRegistration>, AutoC
         return this;
     }
 
-    @Override
-    public void close() {
-        throwIncludeAllMessagesWhenAnyFailures(UNKNOWN_ERROR, "generic");
-    }
 
     @Override
     public String toString() {
@@ -118,65 +113,4 @@ public class ValidationResult implements Iterable<ValidationRegistration>, AutoC
     public String getContext() {
         return context;
     }
-
-    // TODO provide better interface
-    public ValidationResult throwWhenHasFailureCode(String validationCode, String errorMessage) {
-        stream().filter(o -> validationCode.equals(o.getValidationCode())).findFirst().ifPresent(o -> {
-            if (hasFailure()) {
-                throw new ValidationException(validationCode, errorMessage, this, o);
-            }
-        });
-        return this;
-    }
-
-    // TODO provide better interface
-    public ValidationResult throwWhenHasFailureCode(String validationCode) {
-        stream().filter(o -> validationCode.equals(o.getValidationCode())).findFirst().ifPresent(o -> {
-            if (hasFailure()) {
-                throw new ValidationException(validationCode, o.getValidationMessage(), this, o);
-            }
-        });
-        return this;
-    }
-
-    // TODO provide better interface
-    public ValidationResult throwMessageWhenHasFailureCode(String validationCode) {
-        return throwWhenHasFailureCode(validationCode);
-    }
-
-    // TODO provide better interface
-    public ValidationResult throwForFirstFoundWhenAnyFailures() {
-        if (hasFailure()) {
-            String allDetails = getAllDetailsAsString();
-            ValidationRegistration firstValidationFailure = stream().filter(o -> ValidationLevel.Failure.equals(o.getValidationLevel())).findFirst().get();
-            throw new ValidationException(firstValidationFailure.getValidationCode(), allDetails, this, firstValidationFailure);
-        }
-
-        return this;
-    }
-
-    // TODO provide better interface
-    public ValidationResult throwIncludeAllMessagesWhenAnyFailures(String validationCode, String mainValidationMessage) {
-        if (hasFailure()) {
-            StringBuilder errorMessagesStringBuilder = new StringBuilder(Strings.isNullOrEmpty(mainValidationMessage) ? "" : MessageFormat.format("{0}: ",
-                    mainValidationMessage));
-
-            stream().forEach(o -> errorMessagesStringBuilder.append(o.getDetails()).append(", "));
-            String errorMessages = errorMessagesStringBuilder.toString();
-            throw new ValidationException(validationCode, errorMessages, this, stream().findFirst().get());
-        }
-
-        return this;
-    }
-
-    // TODO provide better interface
-    public ValidationResult throwIncludeAllMessagesWhenAnyFailures(String validationCode) {
-        return throwIncludeAllMessagesWhenAnyFailures(validationCode, "");
-    }
-
-    // TODO provide better interface
-    public ValidationResult throwIncludeAllMessagesWhenAnyFailures() {
-        return throwIncludeAllMessagesWhenAnyFailures(UNKNOWN_ERROR, "");
-    }
-
 }
