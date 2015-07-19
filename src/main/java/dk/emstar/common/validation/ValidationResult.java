@@ -104,7 +104,12 @@ public class ValidationResult implements Iterable<ValidationRegistration> {
         return this;
     }
 
-
+    public ValidationResult conclude(Conclusion conclusion) {
+        conclusion.conclude(new ThrowableValidationResult(this));
+        return this;
+    }
+    
+    
     @Override
     public String toString() {
         return String.format("{%s:%s}", context, validationResults.stream().map(Object::toString).collect(Collectors.joining(", ")));

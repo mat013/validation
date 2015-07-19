@@ -37,7 +37,7 @@ public class ValidationResultTest {
         validationResult.registerValidationFailure("12", "input contains test", "test");
         validationResult.registerValidationFailure("13", "input contains test and test2", "test", "test2");
 
-        new ThrowableValidationResult(validationResult).throwIncludeAllMessagesWhenAnyFailures("10");
+        validationResult.conclude(conclusion -> conclusion.throwIncludeAllMessagesWhenAnyFailures("10"));
     }
 
     @Test
@@ -49,7 +49,8 @@ public class ValidationResultTest {
         validationResult.registerValidationFailure("13", "input contains test and test2", "test", "test2");
 
         try {
-            new ThrowableValidationResult(validationResult).throwForFirstFoundWhenAnyFailures();
+            validationResult
+                .conclude(conclusion -> conclusion.throwForFirstFoundWhenAnyFailures());
         } catch (ValidationException e) {
             assertThat(e.getValidationCode()).isEqualTo("11");
             throw e;
@@ -58,7 +59,7 @@ public class ValidationResultTest {
 
     @Test
     public void throwIncludeAllMessagesWhenAnyFailures_NoRegistrations_ExceptionIsNotThrown() throws Exception {
-        new ThrowableValidationResult(validationResult).throwIncludeAllMessagesWhenAnyFailures("10");
+        validationResult.conclude(conclusion -> conclusion.throwIncludeAllMessagesWhenAnyFailures("10"));
     }
 
     @Test

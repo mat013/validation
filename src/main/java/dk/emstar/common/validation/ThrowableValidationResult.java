@@ -14,8 +14,7 @@ public class ThrowableValidationResult implements AutoCloseable{
     
     public static final String UNKNOWN_ERROR = "9999";
 
-    // TODO provide better interface
-    public ThrowableValidationResult throwWhenHasFailureCode(String validationCode, String errorMessage) {
+    public ThrowableValidationResult throwWhenHasValidationCode(String validationCode, String errorMessage) {
         validationResult.stream().filter(o -> validationCode.equals(o.getValidationCode())).findFirst().ifPresent(o -> {
             if (validationResult.hasFailure()) {
                 throw new ValidationException(validationCode, errorMessage, validationResult, o);
@@ -24,8 +23,7 @@ public class ThrowableValidationResult implements AutoCloseable{
         return this;
     }
 
-    // TODO provide better interface
-    public ThrowableValidationResult throwWhenHasFailureCode(String validationCode) {
+    public ThrowableValidationResult throwWhenHasValidationCode(String validationCode) {
         validationResult.stream().filter(o -> validationCode.equals(o.getValidationCode())).findFirst().ifPresent(o -> {
             if (validationResult.hasFailure()) {
                 throw new ValidationException(validationCode, o.getValidationMessage(), validationResult, o);
@@ -34,12 +32,6 @@ public class ThrowableValidationResult implements AutoCloseable{
         return this;
     }
 
-    // TODO provide better interface
-    public ThrowableValidationResult throwMessageWhenHasFailureCode(String validationCode) {
-        return throwWhenHasFailureCode(validationCode);
-    }
-
-    // TODO provide better interface
     public ThrowableValidationResult throwForFirstFoundWhenAnyFailures() {
         if (validationResult.hasFailure()) {
             String allDetails = validationResult.getAllDetailsAsString();
@@ -50,7 +42,6 @@ public class ThrowableValidationResult implements AutoCloseable{
         return this;
     }
 
-    // TODO provide better interface
     public ThrowableValidationResult throwIncludeAllMessagesWhenAnyFailures(String validationCode, String mainValidationMessage) {
         if (validationResult.hasFailure()) {
             StringBuilder errorMessagesStringBuilder = new StringBuilder(Strings.isNullOrEmpty(mainValidationMessage) ? "" : MessageFormat.format("{0}: ",
@@ -64,12 +55,10 @@ public class ThrowableValidationResult implements AutoCloseable{
         return this;
     }
 
-    // TODO provide better interface
     public ThrowableValidationResult throwIncludeAllMessagesWhenAnyFailures(String validationCode) {
         return throwIncludeAllMessagesWhenAnyFailures(validationCode, "");
     }
 
-    // TODO provide better interface
     public ThrowableValidationResult throwIncludeAllMessagesWhenAnyFailures() {
         return throwIncludeAllMessagesWhenAnyFailures(UNKNOWN_ERROR, "");
     }
